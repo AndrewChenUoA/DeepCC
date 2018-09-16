@@ -9,6 +9,7 @@ GET_ALL               = false; % Set this to true if you want to download everyt
 GET_GROUND_TRUTH      = true;
 GET_CALIBRATION       = true;
 GET_VIDEOS            = true;
+GET_FRAMES            = false;
 GET_DPM               = false;
 GET_OPENPOSE          = true;
 GET_FGMASKS           = false;
@@ -84,6 +85,19 @@ if GET_ALL || GET_VIDEOS
     fprintf('Data download complete.\n');
 end
 
+%% Extract frames
+if GET_ALL || (GET_VIDEOS && GET_FRAMES)
+    fprintf('Extracting frames...\n');
+    currDir = pwd;
+    for cam = 1:dataset.numCameras
+        cd([dataset.savePath 'videos/camera' num2str(cam)]); 
+        filelist = '"concat:00000.MTS';
+        for k = 1:dataset.videoParts(cam), filelist = [filelist, '|0000', num2str(k), '.MTS']; end; 
+        framesDir = [dataset.savePath 'frames/camera' num2str(cam) '/%06d.jpg'];
+        command = [ffmpegPath ' -i ' filelist '" -qscale:v 1 -f image2 ' framesDir];
+        system(command);
+    end
+end
 
 %% Download DPM detections
 if GET_ALL || GET_DPM
