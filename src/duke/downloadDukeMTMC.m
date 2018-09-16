@@ -9,7 +9,7 @@ GET_ALL               = false; % Set this to true if you want to download everyt
 GET_GROUND_TRUTH      = true;
 GET_CALIBRATION       = true;
 GET_VIDEOS            = true;
-GET_FRAMES            = false;
+GET_FRAMES            = false; %Not included in GET_ALL to save space, must be manually set on
 GET_DPM               = false;
 GET_OPENPOSE          = true;
 GET_FGMASKS           = false;
@@ -86,7 +86,7 @@ if GET_ALL || GET_VIDEOS
 end
 
 %% Extract frames
-if GET_ALL || (GET_VIDEOS && GET_FRAMES)
+if GET_FRAMES
     fprintf('Extracting frames...\n');
     currDir = pwd;
     for cam = 1:dataset.numCameras
